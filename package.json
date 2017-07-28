@@ -1,58 +1,58 @@
 {
-  "name": "favicons-webpack-plugin",
-  "version": "0.0.7",
-  "description": "Let webpack generate all your favicons and icons for you",
-  "main": "index.js",
-  "files": [
-    "index.js",
-    "lib/"
-  ],
-  "scripts": {
-    "lint": "semistandard",
-    "prepublish": "npm run test",
-    "posttest": "npm run lint",
-    "test": "ava"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jantimon/favicons-webpack-plugin.git"
-  },
-  "keywords": [
-    "webpack",
-    "plugin",
-    "html-webpack-plugin",
-    "favicon",
-    "icon"
-  ],
-  "author": "Jan Nicklas <j.nicklas@me.com> (https://github.com/jantimon)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jantimon/favicons-webpack-plugin/issues"
-  },
-  "semistandard": {
-    "parser": "babel-eslint"
-  },
-  "homepage": "https://github.com/jantimon/favicons-webpack-plugin",
-  "devDependencies": {
-    "ava": "^0.16.0",
-    "babel-eslint": "^7.1.0",
-    "denodeify": "^1.2.1",
-    "dir-compare": "^1.0.1",
-    "express": "^4.13.4",
-    "html-webpack-plugin": "^2.16.0",
-    "memory-fs": "^0.3.0",
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.5.2",
-    "semistandard": "^9.1.0",
-    "webpack": "^1.13.0",
-    "webpack-dev-middleware": "^1.6.1"
-  },
-  "dependencies": {
-    "favicons": "^4.8.3",
-    "loader-utils": "^0.2.14",
-    "lodash": "^4.11.1"
-  },
-  "peerDependencies": {
-    "webpack": "^1.13.0 || ^2.0.0 || ^3.0.0"
-  }
+    "name": "favicons-webpack-plugin",
+    "version": "0.0.7",
+    "description": "Let webpack generate all your favicons and icons for you",
+    "main": "index.js",
+    "files": [
+        "index.js",
+        "lib/"
+    ],
+    "scripts": {
+        "try:node": "tsc && node --inspect-brk ./node_modules/webpack/bin/webpack.js --display none --config example/webpack.config.js",
+        "try": "tsc && webpack --config example/webpack.config.js --display none",
+        "prepublish": "npm run test",
+        "build": "tsc",
+        "test": "mocha test/test.js --no-timeouts",
+        "pretest": "npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jantimon/favicons-webpack-plugin.git"
+    },
+    "keywords": [
+        "webpack",
+        "plugin",
+        "html-webpack-plugin",
+        "favicon",
+        "icon"
+    ],
+    "author": "Jan Nicklas <j.nicklas@me.com> (https://github.com/jantimon)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/jantimon/favicons-webpack-plugin/issues"
+    },
+    "semistandard": {
+        "parser": "babel-eslint"
+    },
+    "homepage": "https://github.com/jantimon/favicons-webpack-plugin",
+    "devDependencies": {
+        "@types/loader-utils": "^1.1.0",
+        "@types/mocha": "^2.2.41",
+        "@types/node": "^8.0.16",
+        "@types/webpack": "^3.0.5",
+        "@types/webpack-env": "^1.13.0",
+        "expect.js": "^0.3.1",
+        "html-webpack-plugin": "^2.29.0",
+        "loader-runner": "^2.3.0",
+        "mocha": "^3.4.2",
+        "typescript": "^2.4.2",
+        "webpack": "^3.4.1"
+    },
+    "dependencies": {
+        "favicons": "^4.8.6",
+        "loader-utils": "^1.1.0"
+    },
+    "peerDependencies": {
+        "webpack": "^1.13.0 || ^2.0.0 || ^3.x"
+    }
 }
