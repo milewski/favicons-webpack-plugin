@@ -3,18 +3,19 @@ import * as path from 'path';
 import { CompilerTemplate } from "./compiler";
 import { Compilation } from "./Interfaces/Compilation";
 import { Compiler } from "./Interfaces/Compiler";
-import { PluginOptionsInterface } from "./Interfaces/PluginOptionsInterface";
+import { Icons, IconsType, Manifest, PluginOptionsInterface } from "./Interfaces/PluginOptionsInterface";
 
 export class FaviconsWebpackPlugin {
 
     public options: PluginOptionsInterface = {
         source: null,
-        emitStats: false,
-        statsFilename: 'icons-stats-[hash].json',
-        cache: true,
+        manifest: true,
+        export: false,
         inject: true,
-
-        path: 'icons-[hash]'
+        icons: 'default',
+        publicPath: '',
+        path: 'icons-[hash]',
+        configuration: {}
     }
 
     constructor(options: PluginOptionsInterface | string) {
@@ -28,10 +29,13 @@ export class FaviconsWebpackPlugin {
             options = { source: options as string };
         }
 
-        this.options = Object.assign({}, this.options, options)
+        this.options = { ...this.options, ...options }
+        this.options.configuration.icons = this.parseIcons(this.options.icons)
+        this.options.configuration.icons = this.parseManifest(this.options.configuration.icons, this.options.manifest)
+        this.options.configuration.path = this.options.path
 
-        if (!this.options.appName) {
-            this.options.appName = this.guessAppName();
+        if (!this.options.configuration.appName) {
+            this.options.configuration.appName = this.guessAppName();
         }
 
     }
@@ -82,7 +86,7 @@ export class FaviconsWebpackPlugin {
         /**
          * Remove the stats from the output if they are not required
          */
-        if (!this.options.emitStats) {
+        if (!this.options.export) {
 
             compiler.plugin('emit', (compilation, callback) => {
                 delete compilation.assets[ compilationResult.outputName ] && callback();
@@ -91,6 +95,71 @@ export class FaviconsWebpackPlugin {
         }
 
     };
+
+    private parseManifest(icons: Partial<Icons>, manifest: Manifest): Partial<Icons> {
+
+        if (typeof manifest === 'object') {
+
+            for (let key in manifest) {
+
+                if (typeof manifest[ key ] === 'boolean') {
+                    if (!manifest[ key ] || typeof icons[ key ] !== 'object') {
+                        icons[ key ] = manifest[ key ]
+                    }
+                }
+
+                if (typeof manifest[ key ] === 'string' && typeof icons[ key ] === 'boolean') {
+                    icons[ key ] = true
+                }
+
+            }
+
+        }
+
+        /**
+         * If manifest is set to false,
+         * disable all "manifestable" icons
+         */
+        if (typeof manifest === 'boolean' && !manifest) {
+            [ 'android', 'windows', 'yandex', 'firefox' ].forEach(platform => {
+                icons[ platform ] = false
+            })
+        }
+
+        return icons
+
+    }
+
+    /**
+     * Return the desired icons
+     */
+    private parseIcons(icons: IconsType): Partial<Icons> {
+
+        if (typeof icons === 'object') {
+            return icons
+        }
+
+        const options = (enable: boolean) => {
+            return {
+                android: enable,
+                appleIcon: enable,
+                appleStartup: enable,
+                coast: enable,
+                favicons: enable,
+                firefox: enable,
+                windows: enable,
+                yandex: enable
+            }
+        }
+
+        const cases = {
+            default: {},
+            dev: { ...options(false), ...{ favicons: true } }
+        }
+
+        return cases[ icons ]
+
+    }
 
     /**
      * Tries to guess the name from the package.json

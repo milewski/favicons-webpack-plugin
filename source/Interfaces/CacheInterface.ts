@@ -1,8 +1,7 @@
 export type Result = {
     html: string[]
     images: string[]
-    files: { name: string, contents: string }[],
-    cached: boolean
+    files: { name: string, contents: string }[]
 }
 
 export interface CacheInterface {

@@ -1,8 +1,4 @@
-type PlatformOptions = {
-    offset: number
-    shadow: string
-    background: boolean | string
-}
+import { Icons } from "./PluginOptionsInterface";
 
 export interface OptionsInterface {
     // outputFilePrefix: string
@@ -24,6 +20,6 @@ export interface OptionsInterface {
     online: boolean
     preferOnline: boolean
     lang: string
-    icons: { [key: string]: boolean | PlatformOptions }
 
+    icons: Partial<Icons>
 }

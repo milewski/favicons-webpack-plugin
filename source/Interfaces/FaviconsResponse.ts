@@ -1,6 +1,8 @@
+export type File = { name: string, contents: string }
+
 export interface FaviconsResponse {
     images: { name: string, contents: Buffer }[]
-    files: { name: string, contents: string }[]
+    files: File[]
     html: string[]
 }
 

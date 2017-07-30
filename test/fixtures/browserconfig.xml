@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <badge>
+            <polling-uri src="badge.xml"/>
+            <frequency>30</frequency>
+        </badge>
+        <notification>
+            <polling-uri src="1.xml"/>
+            <polling-uri2 src="2.xml"/>
+            <polling-uri3 src="3.xml"/>
+            <polling-uri4 src="4.xml"/>
+            <polling-uri5 src="5.xml"/>
+            <frequency>30</frequency>
+            <cycle>1</cycle>
+        </notification>
+        <tile>
+            <keepThisNode src="KEEP"/>
+        </tile>
+    </msapplication>
+</browserconfig>

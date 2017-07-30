@@ -7,7 +7,7 @@ import { getPublicPath } from "./loader";
 export class CompilerTemplate {
 
     private childCompiler
-    private outputOptions
+    private output
 
     constructor(options: PluginOptionsInterface, context: string, private compilation: Compilation) {
 
@@ -15,8 +15,8 @@ export class CompilerTemplate {
          * The entry file is just an empty helper as the dynamic template
          * require is added in "loader.js"
          */
-        this.outputOptions = {
-            filename: options.statsFilename,
+        this.output = {
+            filename: (typeof options.export === 'string') ? options.export : 'icons-stats-[hash].json',
             publicPath: getPublicPath(compilation)
         };
 
@@ -25,7 +25,7 @@ export class CompilerTemplate {
          * and turns it into an Node.JS html factory.
          * This allows us to use loaders during the compilation
          */
-        const compilerName = this.getCompilerName(context, this.outputOptions.filename);
+        const compilerName = this.getCompilerName(context, options.source);
 
         /**
          * Create a Request Entry
@@ -34,7 +34,7 @@ export class CompilerTemplate {
          */
         const sourceImage = new SingleEntryPlugin(context, options.source)
 
-        this.childCompiler = compilation.createChildCompiler(compilerName, this.outputOptions, [ sourceImage ]);
+        this.childCompiler = compilation.createChildCompiler(compilerName, this.output, [ sourceImage ]);
         this.childCompiler.context = context;
         this.childCompiler.options.module = {
             rules:
@@ -42,7 +42,7 @@ export class CompilerTemplate {
                     includes: options.source,
                     loader: require.resolve('../source/loader.js'),
                     options: {
-                        publicPath: this.outputOptions.publicPath,
+                        publicPath: this.output.publicPath,
                         ...options
                     }
                 }
@@ -106,7 +106,7 @@ export class CompilerTemplate {
                 /**
                  * Replace [hash] placeholders in filename
                  */
-                const outputName = this.compilation.mainTemplate.applyPluginsWaterfall('asset-path', this.outputOptions.filename, {
+                const outputName = this.compilation.mainTemplate.applyPluginsWaterfall('asset-path', this.output.filename, {
                     hash: childCompilation.hash,
                     chunk: entries[ 0 ]
                 });
@@ -130,16 +130,16 @@ export class CompilerTemplate {
                 });
 
             });
+
         });
+
     }
 
     /**
      * Returns the child compiler name e.g. 'html-webpack-plugin for "index.html"'
      */
     private getCompilerName(context: string, filename: string): string {
-        const absolutePath = path.resolve(context, filename);
-        const relativePath = path.relative(context, absolutePath);
-        return 'favicons-webpack-plugin for "' + (absolutePath.length < relativePath.length ? absolutePath : relativePath) + '"';
+        return `favicons-webpack-plugin for "${ path.relative(context, filename) }"`;
     }
 
 }

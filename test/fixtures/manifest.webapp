@@ -1,0 +1,13 @@
+{
+    "version": "5.0",
+    "name": "My Super Plugin",
+    "description": "hello world",
+    "icons": {
+        "60": "OVERRIDE",
+        "256": "APPEND"
+    },
+    "developer": {
+        "name": null,
+        "url": null
+    }
+}
